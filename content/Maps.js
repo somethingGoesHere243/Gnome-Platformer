@@ -131,6 +131,9 @@ window.Maps = {
                     height: 20,
                 }
             }),
-        }
+        },
+        screenTransitions: [
+            { destination: 'DemoRoomNight', }
+        ]
     }
 }

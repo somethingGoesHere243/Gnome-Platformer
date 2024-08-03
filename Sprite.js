@@ -20,7 +20,6 @@ class Sprite {
     draw(ctx, cameraPerson) {
         // Determine coordinates to draw object at based on cameraType
         const [drawX, drawY] = utils.cameraAdjustedCoords(this.gameObject.x, this.gameObject.y, cameraPerson);
-        console.log(drawX, drawY)
 
         // Update currentAnimation if needed
         this.currentAnimation = this.gameObject.currentAnimation || this.currentAnimation;
@@ -28,6 +27,7 @@ class Sprite {
         // Get spritesheet coords of desired sprite
         const [spritesheetX, spritesheetY] = this.animations[this.currentAnimation][Math.floor(this.currentAnimationFrame)];
 
+        // Draw sprite if loaded
         if (this.image.isLoaded) {
             ctx.drawImage(this.image,
                 spritesheetX * 32, spritesheetY * 32,

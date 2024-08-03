@@ -1,6 +1,7 @@
 class OverWorldMap {
     constructor(config) {
         this.gameObjects = config.gameObjects;
+        this.screenTransitions = config.screenTransitions || null;
         
         // Load map to be drawn later
         this.map = new Image();
@@ -8,7 +9,7 @@ class OverWorldMap {
         this.map.onload = () => {
             this.map.isLoaded = true;
         };
-
+        // Load collision map to be drawn later
         this.collisionMap = new Image();
         this.collisionMap.src = config.collisionMapSrc;
         this.collisionMap.onload = () => {
@@ -16,6 +17,7 @@ class OverWorldMap {
         }
     }
 
+    // Draws collision map to canvas with its position adjusted to match current camera type
     drawCollisions(ctx, cameraPerson) {
         if (this.collisionMap.isLoaded) {
             if (cameraPerson.cameraType === 'static') {
@@ -30,6 +32,7 @@ class OverWorldMap {
         }
     }
 
+    // Draws map to canvas with its position adjusted to match current camera type
     draw(ctx, cameraPerson) {
         if (this.map.isLoaded) {
             if (cameraPerson.cameraType === 'static') {

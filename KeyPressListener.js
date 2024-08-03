@@ -1,5 +1,5 @@
 // An event listeners for specific keys on keyboard
-// Used only for events where are key is not intended to be held
+// Used only for events where our key is not intended to be held
 
 class KeyPressListener {
     constructor(keycode, callback) {
@@ -7,18 +7,22 @@ class KeyPressListener {
         this.keycode = keycode;
         this.callback = callback;
         
+        // When key is initially pressed call the callback function 
         this.keyDownFunction = (key) => {
-            if (key.code === this.keycode) {
+            if (key.code === this.keycode && keySafe) {
                 keySafe = false;
                 this.callback();
             }
         }
+
+        // When key is released reset keySafe to allow callback to occur again on next key press
         this.keyUpFunction = (key) => {
             if (key.code === this.keycode) {
                 keySafe = true;
             }
         }
 
+        // Add event listeners
         document.addEventListener('keydown', this.keyDownFunction);
         document.addEventListener('keyup', this.keyUpFunction);
     }

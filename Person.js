@@ -19,9 +19,6 @@ class Person extends GameObject {
         this.cameraX = 0;
         this.cameraY = 0;
 
-        // Offset X and Y to fix collision detection with moving camera
-        this.offsetX = 0;
-        this.offsetY = 0;
     }
 
     update(state) {
@@ -38,6 +35,7 @@ class Person extends GameObject {
             this.cameraY = (this.cameraY === 0) ? this.y : this.cameraY;
         }
         
+        // Reset or decrement coyote timer
         if (this.hitbox.canJump(this.x, this.y, this)) {
             this.coyoteTimer = 7;
         } else {
@@ -74,16 +72,11 @@ class Person extends GameObject {
             this.sprite.currentAnimation = `idle-${this.direction}`
         }
 
-        // this.offsetX = 0;
-        // this.offsetY = 0;
-
         // Update horizontal position
-        
-            this.updatePosition(this.direction, state.map);
+        this.updatePosition(this.direction, state.map);
         
         // Update vertical position
-        
-            this.updatePosition('vertical', state.map);
+        this.updatePosition('vertical', state.map);
         
 
         // Update sprite being drawn to canvas
@@ -94,6 +87,7 @@ class Person extends GameObject {
     }
 
     updatePosition(direction, map) {
+        // Apply the requested position change to person
         let [axis, change] = this.directionUpdate[direction];
         if ((this.isWalking && axis === 'x') || (this.directionUpdate['vertical'][1] !== 0 && axis === 'y')) {
             this[axis] += Math.round(change);  
@@ -112,6 +106,7 @@ class Person extends GameObject {
 
         // Check if object is about to collide with a wall/barrier
         while (this.hitbox.isColliding(this.x, this.y, this, [0,0,0,255], map)) {
+            // Move object out of wall/barrier 1 pixel at a time
             this[axis] -= Math.sign(change);
         }
          
