@@ -1,6 +1,6 @@
 class HitBox {
     constructor({x, y, width, height}) {
-        // Creates an array of pixels which make up the edge of the objects hitbox;
+        // Creates an array of pixels which make up the edge of the objects hitbox and a cross through its middle;
         // [Potential bug if want to detect collision with another object which could fit inside of hitbox]
         
         this.hitBoxPixels = [];
@@ -9,6 +9,8 @@ class HitBox {
         for (let currX=0; currX < width; currX++) {
             // Top edge
             this.hitBoxPixels.push([currX + x, y]);
+            // Middle row
+            this.hitBoxPixels.push([currX + x, y + Math.floor(height/2)]);
             // Bottom edge
             this.hitBoxPixels.push([currX + x, y + height - 1]);
             this.bottomHitBoxPixels.push([currX + x, y + height - 1]);
@@ -16,6 +18,8 @@ class HitBox {
         for (let currY=1; currY < height - 1; currY++) {
             // Left edge
             this.hitBoxPixels.push([x, currY + y]);
+            // Middle column
+            this.hitBoxPixels.push([x + Math.floor(width/2), currY + y]);
             // Right edge
             this.hitBoxPixels.push([x + width - 1, currY + y]);
         }
@@ -33,7 +37,7 @@ class HitBox {
         const collisionMap = document.getElementById('hidden-canvas');
         const ctx = collisionMap.getContext('2d');
         if (map) {
-            // Draw collion map to canvas to ensure we consider the most recent positions of hitboxes 
+            // Draw collision map to canvas to ensure we consider the most recent positions of hitboxes 
             // (only important for wall collision as we push player object out of wall)
             map.drawCollisions(ctx, cameraPerson);
         }
@@ -50,9 +54,9 @@ class HitBox {
     }
 
     // Specialisation of above function to check if hitbox is touching a floor
-    canJump(x, y, cameraPerson) {
+    canJump(object, cameraPerson, map = null) {
         // Determine adjusted coordinates based on cameraType
-        const [adjustedX, adjustedY] = utils.cameraAdjustedCoords(x, y, cameraPerson);
+        const [adjustedX, adjustedY] = utils.cameraAdjustedCoords(object.x, object.y, cameraPerson);
 
         let hasCollision = false;
         const collisionMap = document.getElementById('hidden-canvas');
@@ -66,6 +70,13 @@ class HitBox {
                 }   
             }
         })
+        if (map && !hasCollision) {
+            Object.values(map.gameObjects).forEach((gameObject) => {
+                if (!hasCollision && gameObject !== object) {
+                    hasCollision = utils.canJumpOffObject(object, gameObject, cameraPerson);
+                }
+            })
+        }
         return hasCollision;
     }
 }

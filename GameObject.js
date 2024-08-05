@@ -1,7 +1,7 @@
 class GameObject {
     constructor(config) {
         //Set x and y coords to line up with tile based maps;
-        this.x = config.x * 16 -7;
+        this.x = config.x * 16;
         this.y = config.y * 16;
 
         // Set initial x and y to be used as spawn location
@@ -21,6 +21,9 @@ class GameObject {
 
         // Create the objects hitbox
         this.hitbox = new HitBox(config.hitbox)
+
+        // Flag to check if object is pushable
+        this.isPushable = config.isPushable || false;
     }
 
     update() {
