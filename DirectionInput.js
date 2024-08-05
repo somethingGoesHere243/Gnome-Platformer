@@ -27,7 +27,7 @@ class DirectionInput {
                 this.isJumping = true;
             } 
             // Check if player is pressing a valid direction key, and add this direction to list held directions
-            else if (this.heldDirections.indexOf(this.map[key.code]) === -1) {
+            else if (this.heldDirections.indexOf(this.map[key.code]) === -1 && this.map[key.code]) {
                 this.heldDirections.unshift(this.map[key.code]);
             } 
         })

@@ -3,12 +3,10 @@ class Person extends GameObject {
         super(config);
         
         this.direction = 'right';
-        this.isWalking = false;
 
         this.directionUpdate = {
-            'left': ['x', -2],
-            'right': ['x', 2],
-            'vertical': ['y', -1],
+            'x': ['x', 0],
+            'y': ['y', -1],
         }
 
         // Add timer to allow player to jump for a small period of time after leaving ground;
@@ -19,11 +17,35 @@ class Person extends GameObject {
         this.cameraX = 0;
         this.cameraY = 0;
 
+        // Add event listener for dash movement
+        this.dashShiftLeft = new KeyPressListener('ShiftLeft', () => { this.dash() });
+        this.dashShiftRight = new KeyPressListener('ShiftRight', () => { this.dash() });
+
+        // Add boolean to check if player is allowed to dash
+        this.canDash = true;
+        this.framesSinceLastDash = 0;
+    }
+
+    dash() {
+        if (this.canDash) {
+            // Increase horizontal speed
+            if (this.direction === 'right') {
+                this.directionUpdate['x'][1] = 20;
+            } else if (this.direction === 'left') {
+                this.directionUpdate['x'][1] = -20;
+            }
+            // Prevent player from dashing again until touching ground
+            this.canDash = false;
+            // Reser frames since last dash counter
+            this.framesSinceLastDash = 0;
+        } 
     }
 
     update(state) {
         // Check if camera type should change
-        if (this.hitbox.isColliding(this.x, this.y, this, [0,0,255,255])) {
+        if (this.hitbox.isColliding(this.x, this.y, this, [255,255,255,255])) {
+            this.cameraType = 'static';
+        } else if (this.hitbox.isColliding(this.x, this.y, this, [0,0,255,255])) {
             this.cameraType = 'horizontal';
             this.cameraX = (this.cameraX === 0) ? this.x : this.cameraX;
         } else if (this.hitbox.isColliding(this.x, this.y, this, [255,255,0,255])) {
@@ -34,6 +56,9 @@ class Person extends GameObject {
             this.cameraX = (this.cameraX === 0) ? this.x : this.cameraX;
             this.cameraY = (this.cameraY === 0) ? this.y : this.cameraY;
         }
+
+        // Increment frames since last dash
+        this.framesSinceLastDash += 1;
         
         // Reset or decrement coyote timer
         if (this.hitbox.canJump(this.x, this.y, this)) {
@@ -42,41 +67,50 @@ class Person extends GameObject {
             this.coyoteTimer -= 1;
         }
 
-        // Reset y-velocity if touching floor
+        // Reset y-velocity and ability to dash if touching floor
         if (this.hitbox.canJump(this.x, this.y, this)) {
-            this.directionUpdate['vertical'][1] = 0;
+            this.directionUpdate['y'][1] = 0;
+            // Check a suitable amount of time has passed since previous dash
+            if (this.framesSinceLastDash >= 30) {
+                this.canDash = true;
+            } 
         } else {
             // Apply gravity if not on floor
-            if (this.directionUpdate['vertical'][1] < 2) {
-                this.directionUpdate['vertical'][1] += 0.4;
-            } else if (this.directionUpdate['vertical'][1] >= -1) {
-                this.directionUpdate['vertical'][1] += 0.2;
+            if (this.directionUpdate['y'][1] < 2) {
+                this.directionUpdate['y'][1] += 0.4;
+            } else if (this.directionUpdate['y'][1] >= -1) {
+                this.directionUpdate['y'][1] += 0.2;
             } else {
-                this.directionUpdate['vertical'][1] += 0.6;
+                this.directionUpdate['y'][1] += 0.6;
             }  
         }
 
         // Check if player is attempting to jump
         if (state.isJumping && (this.hitbox.canJump(this.x, this.y, this) || this.coyoteTimer > 0)) {
             this.coyoteTimer = 0;
-            this.directionUpdate['vertical'][1] = -7;
+            this.directionUpdate['y'][1] = -7;
         }
 
         // Check if player is attempting to move left/right
         if (state.arrow) {
             this.direction = state.arrow;
-            this.isWalking = true;
             this.sprite.currentAnimation = `walk-${this.direction}`
+            // Give player horizontal velocity and apply deceleration if needed
+            if (this.direction === 'right') {
+                this.directionUpdate['x'][1] = Math.max(2, 0.9 * this.directionUpdate['x'][1]);
+            } else if (this.direction === 'left') {
+                this.directionUpdate['x'][1] = Math.min(-2, 0.9 * this.directionUpdate['x'][1]);
+            }
         } else {
-            this.isWalking = false;
-            this.sprite.currentAnimation = `idle-${this.direction}`
+            this.directionUpdate['x'][1] = 0.8 * this.directionUpdate['x'][1];
+            this.sprite.currentAnimation = `idle-${this.direction}`;
         }
 
         // Update horizontal position
-        this.updatePosition(this.direction, state.map);
+        this.updatePosition('x', state.map);
         
         // Update vertical position
-        this.updatePosition('vertical', state.map);
+        this.updatePosition('y', state.map);
         
 
         // Update sprite being drawn to canvas
@@ -89,9 +123,7 @@ class Person extends GameObject {
     updatePosition(direction, map) {
         // Apply the requested position change to person
         let [axis, change] = this.directionUpdate[direction];
-        if ((this.isWalking && axis === 'x') || (this.directionUpdate['vertical'][1] !== 0 && axis === 'y')) {
-            this[axis] += Math.round(change);  
-        }   
+        this[axis] += Math.round(change);   
 
         // Check if object is about to enter a death barrier or leave bottom of screen
         if (this.hitbox.isColliding(this.x, this.y, this, [255,0,0,255], map) || this.y > 288) {
@@ -101,7 +133,7 @@ class Person extends GameObject {
             this.cameraY = 0;
             this.x = this.initialX;
             this.y = this.initialY;
-            this.directionUpdate['vertical'][1] = 0;
+            this.directionUpdate['y'][1] = 0;
         }
 
         // Check if object is about to collide with a wall/barrier

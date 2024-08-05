@@ -5,13 +5,12 @@ class KeyPressListener {
     constructor(keycode, callback) {
         let keySafe = true;
         this.keycode = keycode;
-        this.callback = callback;
         
         // When key is initially pressed call the callback function 
         this.keyDownFunction = (key) => {
             if (key.code === this.keycode && keySafe) {
                 keySafe = false;
-                this.callback();
+                callback();
             }
         }
 
