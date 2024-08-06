@@ -13,8 +13,8 @@ class GameObject {
 
         // Create sprite with corresponding spritesheet and animations
         this.sprite = new Sprite({
-            animations: config.animations,
-            currentAnimation: config.currentAnimation,
+            animations: config.animations || {'idle': [[0,0]]},
+            currentAnimation: config.currentAnimation || 'idle',
             src: config.src,
             gameObject: this,
         }); 
@@ -22,8 +22,9 @@ class GameObject {
         // Create the objects hitbox
         this.hitbox = new HitBox(config.hitbox)
 
-        // Flag to check if object is pushable
+        // Retrieve information about any specific properties of object
         this.isPushable = config.isPushable || false;
+        this.isPlatform = config.isPlatform || false;
     }
 
     update() {

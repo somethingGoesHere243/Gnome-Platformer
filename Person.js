@@ -144,7 +144,8 @@ class Person extends GameObject {
 
         // Check if person is about to collide with another GameObject
         Object.values(map.gameObjects).forEach(obj => {
-            if (obj !== this) {
+            // Ensure object isn't the person and that object is close enough for a collision to be possible
+            if (obj !== this && Math.abs(obj.x - this.x) < 128 && Math.abs(obj.y - this.y) < 128) {
                 while (utils.objectsAreColliding(this, obj, this)) {
                     // If object is pushable and player approaches from side push it away from player
                     if (obj.isPushable && axis === 'x') {
@@ -155,7 +156,14 @@ class Person extends GameObject {
                         } else {
                             obj.x += Math.sign(change);
                         }
-                    } else {
+                    } 
+                    // If object is a platform player should only be stopped if approaching from above
+                    else if (obj.isPlatform && (axis === 'x' ||  this.directionUpdate['y'][1] <= 0)) {
+                        // Nothing occurs
+                        break
+                    }
+                    // Else push player out of object
+                    else {
                         this[axis] -= Math.sign(change);
                     }
                 }
