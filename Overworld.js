@@ -35,6 +35,7 @@ class OverWorld {
             Object.values(this.map.gameObjects).forEach((gameObject) => {
                 gameObject.update({
                     arrow: this.directionInput.direction,
+                    cameraPerson: player,
                     isJumping: this.directionInput.isJumping,
                     map : this.map,
                 });

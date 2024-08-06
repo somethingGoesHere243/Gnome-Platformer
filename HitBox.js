@@ -54,7 +54,7 @@ class HitBox {
     }
 
     // Specialisation of above function to check if hitbox is touching a floor
-    canJump(object, cameraPerson, map = null) {
+    isOnGround(object, cameraPerson, map = null) {
         // Determine adjusted coordinates based on cameraType
         const [adjustedX, adjustedY] = utils.cameraAdjustedCoords(object.x, object.y, cameraPerson);
 

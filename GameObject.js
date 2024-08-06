@@ -8,9 +8,6 @@ class GameObject {
         this.initialX = this.x;
         this.initialY = this.y;
 
-        // Retrieve direction which object is currently facing
-        this.direction = config.direction || 'right';
-
         // Create sprite with corresponding spritesheet and animations
         this.sprite = new Sprite({
             animations: config.animations || {'idle': [[0,0]]},
@@ -23,7 +20,6 @@ class GameObject {
         this.hitbox = new HitBox(config.hitbox)
 
         // Retrieve information about any specific properties of object
-        this.isPushable = config.isPushable || false;
         this.isPlatform = config.isPlatform || false;
     }
 

@@ -1,6 +1,6 @@
 // Function to create a pushable box at the given x,y coordinates
 const createPushBox = (xCoord, yCoord) => {
-    return new GameObject({
+    return new PushBox({
             x: xCoord,
             y: yCoord,
             src: 'images/Objects/Push-Box.png',
@@ -11,7 +11,6 @@ const createPushBox = (xCoord, yCoord) => {
                 width: 32,
                 height: 32,
             },
-            isPushable: true,
         })
 }
 
@@ -44,10 +43,7 @@ window.Maps = {
                 y: 15,
                 src: 'images/Characters/Gnome.png',
                 animations: {
-                    'idle-left': [[0,1]],
-                    'idle-right': [[0,0]],
-                    'walk-left': [[0,1], [1,1], [2,1], [3,1]],
-                    'walk-right': [[0,0], [1,0], [2,0], [3,0]],
+                    'idle-right': [[0,2]],
                 },
                 currentAnimation: 'idle-right',
                 hitbox: {
@@ -63,12 +59,12 @@ window.Maps = {
                 y: 14,
                 src: 'images/Characters/Gnome.png',
                 animations: {
-                    'idle-left': [[0,1]],
-                    'idle-right': [[0,0]],
-                    'walk-left': [[0,1], [1,1], [2,1], [3,1]],
-                    'walk-right': [[0,0], [1,0], [2,0], [3,0]],
+                    'idle-left': [[1,2]],
+                    'idle-right': [[0,2]],
+                    'walk-left': [[0,1], [1,1], [2,1], [3,1], [4,1], [5,1], [6,1], [7,1]],
+                    'walk-right': [[0,0], [1,0], [2,0], [3,0], [4,0], [5,0], [6,0], [7,0]],
                 },
-                currentAnimation: 'idle-right',
+                currentAnimation: 'idle-left',
                 hitbox: {
                     //x, y relative to top-left corner of 32x32 sprite image
                     x: 10,
@@ -89,10 +85,7 @@ window.Maps = {
                 y: 13,
                 src: 'images/Characters/Gnome.png',
                 animations: {
-                    'idle-left': [[0,1]],
-                    'idle-right': [[0,0]],
-                    'walk-left': [[0,1], [1,1], [2,1], [3,1]],
-                    'walk-right': [[0,0], [1,0], [2,0], [3,0]],
+                    'idle-right': [[0,2]],
                 },
                 currentAnimation: 'idle-right',
                 hitbox: {
@@ -108,10 +101,10 @@ window.Maps = {
                 y: 15,
                 src: 'images/Characters/Gnome.png',
                 animations: {
-                    'idle-left': [[0,1]],
-                    'idle-right': [[0,0]],
-                    'walk-left': [[0,1], [1,1], [2,1], [3,1]],
-                    'walk-right': [[0,0], [1,0], [2,0], [3,0]],
+                    'idle-left': [[1,2]],
+                    'idle-right': [[0,2]],
+                    'walk-left': [[0,1], [1,1], [2,1], [3,1], [4,1], [5,1], [6,1], [7,1]],
+                    'walk-right': [[0,0], [1,0], [2,0], [3,0], [4,0], [5,0], [6,0], [7,0]],
                 },
                 currentAnimation: 'idle-left',
                 hitbox: {
@@ -142,6 +135,10 @@ window.Maps = {
                 x: 220,
                 y: 14,
                 src: 'images/Characters/Gnome.png',
+                animations: {
+                    'idle-right': [[0,2]],
+                },
+                currentAnimation: 'idle-right',
                 hitbox: {
                     //x, y relative to top-left corner of 32x32 sprite image
                     x: 10,
@@ -155,17 +152,17 @@ window.Maps = {
                 y: 14,
                 src: 'images/Characters/Gnome.png',
                 animations: {
-                    'idle-left': [[0,1]],
-                    'idle-right': [[0,0]],
-                    'walk-left': [[0,1], [1,1], [2,1], [3,1]],
-                    'walk-right': [[0,0], [1,0], [2,0], [3,0]],
+                    'idle-left': [[1,2]],
+                    'idle-right': [[0,2]],
+                    'walk-left': [[0,1], [1,1], [2,1], [3,1], [4,1], [5,1], [6,1], [7,1]],
+                    'walk-right': [[0,0], [1,0], [2,0], [3,0], [4,0], [5,0], [6,0], [7,0]],
                 },
                 currentAnimation: 'idle-left',
                 hitbox: {
                     //x, y relative to top-left corner of 32x32 sprite image
                     x: 10,
                     y: 12,
-                    width: 11,
+                    width: 10,
                     height: 20,
                 },
             }),

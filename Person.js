@@ -61,14 +61,14 @@ class Person extends GameObject {
         this.framesSinceLastDash += 1;
         
         // Reset or decrement coyote timer
-        if (this.hitbox.canJump(this, this, state.map)) {
+        if (this.hitbox.isOnGround(this, this, state.map)) {
             this.coyoteTimer = 7;
         } else {
             this.coyoteTimer -= 1;
         }
 
         // Reset y-velocity and ability to dash if touching floor
-        if (this.hitbox.canJump(this, this, state.map)) {
+        if (this.hitbox.isOnGround(this, this, state.map)) {
             this.directionUpdate['y'][1] = 0;
             // Check a suitable amount of time has passed since previous dash
             if (this.framesSinceLastDash >= 30) {
@@ -86,7 +86,7 @@ class Person extends GameObject {
         }
 
         // Check if player is attempting to jump
-        if (state.isJumping && (this.hitbox.canJump(this, this, state.map) || this.coyoteTimer > 0)) {
+        if (state.isJumping && (this.hitbox.isOnGround(this, this, state.map) || this.coyoteTimer > 0)) {
             this.coyoteTimer = 0;
             this.directionUpdate['y'][1] = -7;
         }
@@ -127,13 +127,17 @@ class Person extends GameObject {
 
         // Check if person is about to enter a death barrier or leave bottom of screen
         if (this.hitbox.isColliding(this.x, this.y, this, [255,0,0,255], map) || this.y > 288) {
-            // Reset position and velocity
+            // Reset camera and velocity
             this.cameraType = 'static'
             this.cameraX = 0;
             this.cameraY = 0;
-            this.x = this.initialX;
-            this.y = this.initialY;
+            this.directionUpdate['x'][1] = 0;
             this.directionUpdate['y'][1] = 0;
+            // Reset position for all gameObjects
+            Object.values(map.gameObjects).forEach(obj => {
+                obj.x = obj.initialX;
+                obj.y = obj.initialY;
+            })    
         }
 
         // Check if person is about to collide with a wall/barrier
@@ -148,7 +152,7 @@ class Person extends GameObject {
             if (obj !== this && Math.abs(obj.x - this.x) < 128 && Math.abs(obj.y - this.y) < 128) {
                 while (utils.objectsAreColliding(this, obj, this)) {
                     // If object is pushable and player approaches from side push it away from player
-                    if (obj.isPushable && axis === 'x') {
+                    if (obj instanceof PushBox && axis === 'x') {
                         this.directionUpdate['x'][1] = 0;
                         // If object is about to collide with wall don't allow pushing
                         if (obj.hitbox.isColliding(obj.x + Math.sign(change), obj.y, this, [0,0,0,255], map)) {
