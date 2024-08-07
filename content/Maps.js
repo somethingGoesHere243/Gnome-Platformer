@@ -31,6 +31,30 @@ const createPlatform = (xCoord, yCoord) => {
         })
 }
 
+//Function to create a goblin at the given coordinates with the given path
+const createGoblin = (xCoord, yCoord, givenPath) => {
+    return new Enemy({
+        x: xCoord,
+        y: yCoord,
+        src: 'images/Characters/Goblin.png',
+        animations: {
+            'idle-left': [[1,2]],
+            'idle-right': [[0,2]],
+            'walk-left': [[0,1], [1,1], [2,1], [3,1], [4,1], [5,1], [6,1], [7,1]],
+            'walk-right': [[0,0], [1,0], [2,0], [3,0], [4,0], [5,0], [6,0], [7,0]],
+        },
+        currentAnimation: 'idle-right',
+        hitbox: {
+            //x, y relative to top-left corner of 32x32 sprite image
+            x: 12,
+            y: 11,
+            width: 8,
+            height: 21,
+        },
+        path: givenPath,
+    })
+}
+
 
 // Object containing all maps in the game
 window.Maps = {
@@ -131,6 +155,24 @@ window.Maps = {
             'Platform7': createPlatform(32,12),
             'Platform8': createPlatform(33,12),
             'PushBox': createPushBox(117,12),
+            'Goblin1': createGoblin(65, 14, [
+                // [Action/animation, number of frames],
+                ['walk-left', 30],
+                ['idle-left', 30],
+                ['idle-right', 30],
+                ['walk-right', 30],
+                ['idle-right', 30],
+                ['idle-left', 30],
+            ]),
+            'Goblin2': createGoblin(75, 14, [
+                // [Action/animation, number of frames],
+                ['walk-left', 30],
+                ['idle-left', 10],
+                ['idle-right', 20],
+                ['walk-right', 30],
+                ['idle-right', 10],
+                ['idle-left', 20],
+            ]),
             'NPC1': new GameObject({
                 x: 220,
                 y: 14,

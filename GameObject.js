@@ -24,6 +24,10 @@ class GameObject {
     }
 
     update() {
-        
+        // Update sprite being drawn to canvas
+        this.sprite.currentAnimationFrame += 0.25;
+        if (this.sprite.currentAnimationFrame >= this.sprite.animations[this.sprite.currentAnimation].length) {
+            this.sprite.currentAnimationFrame = 0;
+        }
     }
 }

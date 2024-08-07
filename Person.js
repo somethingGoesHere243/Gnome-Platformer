@@ -41,6 +41,25 @@ class Person extends GameObject {
         } 
     }
 
+    respawn(map) {
+        // Reset camera and velocity
+        this.cameraType = 'static'
+        this.cameraX = 0;
+        this.cameraY = 0;
+        this.directionUpdate['x'][1] = 0;
+        this.directionUpdate['y'][1] = 0;
+        // Reset position and animations for all gameObjects
+        Object.values(map.gameObjects).forEach(obj => {
+            obj.x = obj.initialX;
+            obj.y = obj.initialY;
+            if (obj instanceof Enemy) {
+                obj.currentPathIndex = 0;                       
+                obj.currentAnimation = obj.path[0][0];
+                obj.frameCounter = 0;
+            }
+        }) 
+    }
+
     update(state) {
         // Check if camera type should change
         if (this.hitbox.isColliding(this.x, this.y, this, [255,255,255,255])) {
@@ -127,17 +146,7 @@ class Person extends GameObject {
 
         // Check if person is about to enter a death barrier or leave bottom of screen
         if (this.hitbox.isColliding(this.x, this.y, this, [255,0,0,255], map) || this.y > 288) {
-            // Reset camera and velocity
-            this.cameraType = 'static'
-            this.cameraX = 0;
-            this.cameraY = 0;
-            this.directionUpdate['x'][1] = 0;
-            this.directionUpdate['y'][1] = 0;
-            // Reset position for all gameObjects
-            Object.values(map.gameObjects).forEach(obj => {
-                obj.x = obj.initialX;
-                obj.y = obj.initialY;
-            })    
+            this.respawn(map);   
         }
 
         // Check if person is about to collide with a wall/barrier
@@ -150,6 +159,12 @@ class Person extends GameObject {
         Object.values(map.gameObjects).forEach(obj => {
             // Ensure object isn't the person and that object is close enough for a collision to be possible
             if (obj !== this && Math.abs(obj.x - this.x) < 128 && Math.abs(obj.y - this.y) < 128) {
+                
+                // If object is an enemy and collides with player then respawn player
+                if (obj instanceof Enemy && utils.objectsAreColliding(this, obj, this)) {
+                    this.respawn(map);
+                }
+
                 while (utils.objectsAreColliding(this, obj, this)) {
                     // If object is pushable and player approaches from side push it away from player
                     if (obj instanceof PushBox && axis === 'x') {
