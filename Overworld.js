@@ -61,6 +61,7 @@ class OverWorld {
                             // Remove new element after transition
                             document.addEventListener('animationend', () => {
                                 fadeDiv.remove();
+                                this.isTransitioning = false;
                             }, {once: true})
                         }, {once: true})
                     }

@@ -142,9 +142,9 @@ window.Maps = {
         }
     },
 
-    'Level01': {
-        src: 'images/Maps/Level-01.png',
-        collisionMapSrc: 'images/Maps/Level-01-Collision.png',
+    'TestLevel': {
+        src: 'images/Maps/Test-Level.png',
+        collisionMapSrc: 'images/Maps/Test-Level-Collision.png',
         gameObjects: {
             'Platform1': createPlatform(26,16),
             'Platform2': createPlatform(27,16),
@@ -211,6 +211,102 @@ window.Maps = {
         },
         screenTransitions: [
             { destination: 'DemoRoomNight', }
-        ]
-    }
+        ],
+    }, 
+
+    'Level01': {
+        src: 'images/Maps/Level01.png',
+        collisionMapSrc: 'images/Maps/Level01-Collision.png',
+        gameObjects: {
+            'Player': new Person({
+                x: 2,
+                y: 13,
+                src: 'images/Characters/Gnome.png',
+                animations: {
+                    'idle-left': [[1,2]],
+                    'idle-right': [[0,2]],
+                    'walk-left': [[0,1], [1,1], [2,1], [3,1], [4,1], [5,1], [6,1], [7,1]],
+                    'walk-right': [[0,0], [1,0], [2,0], [3,0], [4,0], [5,0], [6,0], [7,0]],
+                },
+                currentAnimation: 'idle-right',
+                hitbox: {
+                    //x, y relative to top-left corner of 32x32 sprite image
+                    x: 10,
+                    y: 12,
+                    width: 11,
+                    height: 20,
+                },
+            }),
+        },
+        screenTransitions: [
+            { destination: 'Level02', }
+        ],
+    },
+    'Level02': {
+        src: 'images/Maps/Level02.png',
+        collisionMapSrc: 'images/Maps/Level02-Collision.png',
+        gameObjects: {
+            'Player': new Person({
+                x: 30,
+                y: 13,
+                src: 'images/Characters/Gnome.png',
+                animations: {
+                    'idle-left': [[1,2]],
+                    'idle-right': [[0,2]],
+                    'walk-left': [[0,1], [1,1], [2,1], [3,1], [4,1], [5,1], [6,1], [7,1]],
+                    'walk-right': [[0,0], [1,0], [2,0], [3,0], [4,0], [5,0], [6,0], [7,0]],
+                },
+                currentAnimation: 'idle-left',
+                hitbox: {
+                    //x, y relative to top-left corner of 32x32 sprite image
+                    x: 10,
+                    y: 12,
+                    width: 11,
+                    height: 20,
+                },
+            }),
+        },
+        screenTransitions: [
+            { destination: 'Level03', }
+        ],
+    },
+    'Level03': {
+        src: 'images/Maps/Level03.png',
+        collisionMapSrc: 'images/Maps/Level03-Collision.png',
+        gameObjects: {
+            'Platform1': createPlatform(28,6),
+            'Platform2': createPlatform(29,6),
+            'Platform3': createPlatform(30,6),
+            'PushBox': createPushBox(8,13),
+            'Enemy': createGoblin(5, 3, [['walk-right', 120],
+                ['idle-right', 30],
+                ['idle-left', 30],
+                ['walk-left', 120],
+                ['idle-left', 30],
+                ['idle-right', 30],
+            ]),
+            'Player': new Person({
+                x: 2,
+                y: 13,
+                src: 'images/Characters/Gnome.png',
+                animations: {
+                    'idle-left': [[1,2]],
+                    'idle-right': [[0,2]],
+                    'walk-left': [[0,1], [1,1], [2,1], [3,1], [4,1], [5,1], [6,1], [7,1]],
+                    'walk-right': [[0,0], [1,0], [2,0], [3,0], [4,0], [5,0], [6,0], [7,0]],
+                },
+                currentAnimation: 'idle-right',
+                hitbox: {
+                    //x, y relative to top-left corner of 32x32 sprite image
+                    x: 10,
+                    y: 12,
+                    width: 11,
+                    height: 20,
+                },
+            }),
+        },
+        screenTransitions: [
+            { destination: 'TestLevel', }
+        ],
+    },
 }

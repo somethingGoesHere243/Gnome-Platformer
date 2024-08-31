@@ -30,9 +30,9 @@ class Person extends GameObject {
         if (this.canDash) {
             // Increase horizontal speed
             if (this.direction === 'right') {
-                this.directionUpdate['x'][1] = 20;
+                this.directionUpdate['x'][1] = 15;
             } else if (this.direction === 'left') {
-                this.directionUpdate['x'][1] = -20;
+                this.directionUpdate['x'][1] = -15;
             }
             // Prevent player from dashing again until touching ground
             this.canDash = false;
