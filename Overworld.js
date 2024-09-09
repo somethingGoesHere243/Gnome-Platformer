@@ -31,16 +31,18 @@ class OverWorld {
             // Draw map to visible canvas
             this.map.draw(this.ctx, player);
 
-            // Draw each GameObject to canvas
-            Object.values(this.map.gameObjects).forEach((gameObject) => {
-                gameObject.update({
-                    arrow: this.directionInput.direction,
-                    cameraPerson: player,
-                    isJumping: this.directionInput.isJumping,
-                    map : this.map,
-                });
-                gameObject.sprite.draw(this.ctx, player);
-            }) 
+            // Draw each GameObject to canvas (only if collision map has been loaded)
+            if (this.map.collisionMap.isLoaded) {
+                Object.values(this.map.gameObjects).forEach((gameObject) => {
+                    gameObject.update({
+                        arrow: this.directionInput.direction,
+                        cameraPerson: player,
+                        isJumping: this.directionInput.isJumping,
+                        map : this.map,
+                    });
+                    gameObject.sprite.draw(this.ctx, player);
+                }) 
+            }
 
             // Check if player has entered a screen transition area
             if (this.map.screenTransitions !== null) {
